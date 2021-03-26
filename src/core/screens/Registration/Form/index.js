@@ -2,11 +2,13 @@ import React from "react";
 import {ViewPropTypes, Keyboard} from 'react-native';
 import * as Yup from "yup";
 import {useFormik} from "formik";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 import styles from './styles'
 import {checkObjectValid} from "../../../../utils";
 import Input from "../../../components/Form/Input";
 import SubmitButton from "../../../components/Form/SubmitButton";
+import {Container} from "../../../components";
 
 const regSchema = Yup.object().shape({
     email: Yup.string().email('Email is not valid').required('Email is required'),
@@ -55,7 +57,7 @@ const RegForm = ({ inputStyle }) => {
     const {
         errors, handleChange, resetForm,
         handleSubmit, values, touched, isValid,
-        setFieldError,handleBlur,
+        setFieldError, handleBlur,
     } = useFormik({
         validationSchema: regSchema,
         initialValues: inputs,
@@ -88,7 +90,7 @@ const RegForm = ({ inputStyle }) => {
             return Object.keys(inputs).map((inputName = '', index = 0) => (
                 <Input
                     key={`input-${inputName}-${index}`}
-                    error={errors[inputName]}
+                    error={touched[inputName] && errors[inputName]}
                     style={[
                         inputStyle,
                         errors[inputName] && touched[inputName] && {
@@ -101,8 +103,8 @@ const RegForm = ({ inputStyle }) => {
                     value={values[inputName]}
                     onChangeText={handleChange(inputName)}
                     onBlur={(props) => handleBlur(inputName)(props)}
-                    onSubmitEditing={()=> Keyboard.dismiss()}
-                    { ...(uniqInputsProps[inputName] || {}) }
+                    onSubmitEditing={() => Keyboard.dismiss()}
+                    {...(uniqInputsProps[inputName] || {})}
                 />
             ));
         }
@@ -129,8 +131,8 @@ const RegForm = ({ inputStyle }) => {
     ), [isValid, touched, values, errors]);
 
     return (
-        <>
-            { renderFields() }
+        <Container style={styles.container}>
+            {renderFields()}
 
             <SubmitButton
                 style={[styles.submitBtn, !inputsValid && {opacity: .5}]}
@@ -138,7 +140,7 @@ const RegForm = ({ inputStyle }) => {
                 title="Sign Up"
                 activeOpacity={!inputsValid ? 1 : .5}
             />
-        </>
+        </Container>
     );
 }
 

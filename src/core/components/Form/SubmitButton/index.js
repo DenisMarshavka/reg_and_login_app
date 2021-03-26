@@ -1,5 +1,5 @@
 import React from "react";
-import {TouchableOpacity, Text, ViewPropTypes} from 'react-native';
+import {TouchableOpacity, Text, ViewPropTypes, View} from 'react-native';
 import PropType from "prop-types";
 
 import styles from './styles'
@@ -15,8 +15,7 @@ const SubmitButton = ({
     activeOpacity,
     title,
 }) => (
-    <TouchableOpacity
-        activeOpacity={activeOpacity}
+    <View
         style={[
             styles.element,
             style,
@@ -24,16 +23,21 @@ const SubmitButton = ({
                 backgroundColor: COLORS[isDarkTheme ? 'light' : 'dark']
             }
         ]}
-        onPress={onPress}
     >
-        <Text
-            style={[
-                styles.text,
-                textStyle,
-                { color: COLORS[isDarkTheme ? 'dark' : 'light'] }
-            ]}
-        >{title}</Text>
-    </TouchableOpacity>
+        <TouchableOpacity
+            activeOpacity={activeOpacity}
+            style={styles.elementTouchable}
+            onPress={onPress}
+        >
+            <Text
+                style={[
+                    styles.text,
+                    textStyle,
+                    { color: COLORS[isDarkTheme ? 'dark' : 'light'] }
+                ]}
+            >{title}</Text>
+        </TouchableOpacity>
+    </View>
 );
 
 SubmitButton.propTypes = {

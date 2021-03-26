@@ -61,7 +61,7 @@ Input.propTypes = {
     placeholder: PropType.string,
     onChangeText: PropType.func.isRequired,
     value: PropType.string.isRequired,
-    error: PropType.string,
+    error: PropType.oneOfType([PropType.string, PropType.bool]),
 };
 
 Input.defaultProps = {

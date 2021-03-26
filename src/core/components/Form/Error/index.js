@@ -1,5 +1,5 @@
 import React from "react";
-import {TextInput, ViewPropTypes} from 'react-native';
+import {Text, ViewPropTypes} from 'react-native';
 import PropType from "prop-types";
 
 import styles from './styles'
@@ -11,9 +11,9 @@ const Error = ({
     if (typeof errorText !== 'string' || !errorText.trim()) return null;
 
     return (
-        <TextInput style={[styles.element, style]}>
+        <Text style={[styles.element, style]}>
             {`* ${errorText}`}
-        </TextInput>
+        </Text>
     );
 }
 
