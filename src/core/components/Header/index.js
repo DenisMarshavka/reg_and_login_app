@@ -8,57 +8,73 @@ import styles from './styles';
 import withSystemTheme from "../../../utils/HoC/withSystemTheme";
 import {COLORS} from "../../constants";
 
-const Header = ({ withBackHandler, navigation, title, isDarkTheme, style, colorText }) => (
-    <SafeAreaView
-        style={
-            [
-                styles.safeAreaView,
-                isDarkTheme && {
-                    backgroundColor: COLORS.dark,
-                }
-            ]
-        }
-    >
-        <View
+const Header = ({ withBackHandler, navigation, title, isDarkTheme, style, colorText }) => {
+    const titleLeftOffset = React.useMemo(() => {
+        let width = 0;
+
+        if (
+            title && typeof title === 'string'
+            && title.length && withBackHandler
+        ) width = -10;
+
+        return width;
+    }, [withBackHandler, title]);
+
+    return (
+        <SafeAreaView
             style={
                 [
-                    styles.container,
-                    style,
+                    styles.safeAreaView,
                     isDarkTheme && {
                         backgroundColor: COLORS.dark,
-                        borderBottomColor: COLORS.light,
                     }
                 ]
             }
         >
-            {
-                withBackHandler && (
-                    <TouchableOpacity
-                        onPress={
-                            () => navigation && navigation.goBack
-                                && navigation.goBack()
+            <View
+                style={
+                    [
+                        styles.container,
+                        style,
+                        isDarkTheme && {
+                            backgroundColor: COLORS.dark,
+                            borderBottomColor: COLORS.light,
                         }
-                        style={styles.backBtn}
-                    >
-                        <FontAwesomeIcon icon={faChevronLeft} color={COLORS[colorText]} style={styles.backBtnIcon} size={26} />
-                    </TouchableOpacity>
-                )
-            }
-
-            <Text
-                style={{
-                    ...styles.title,
-                    color: COLORS[colorText],
-                    left: title && typeof title === 'string' && title.length
-                        ? -((title.length + 4) / 2)
-                        : 0,
-                }}
+                    ]
+                }
             >
-                {title}
-            </Text>
-        </View>
-    </SafeAreaView>
-);
+                {
+                    withBackHandler && (
+                        <TouchableOpacity
+                            onPress={
+                                () => navigation && navigation.goBack
+                                    && navigation.goBack()
+                            }
+                            style={styles.backBtn}
+                        >
+                            <FontAwesomeIcon
+                                icon={faChevronLeft}
+                                color={COLORS[colorText]}
+                                style={styles.backBtnIcon}
+                                size={26}
+                            />
+                        </TouchableOpacity>
+                    )
+                }
+
+                <Text
+                    style={{
+                        ...styles.title,
+                        color: COLORS[colorText],
+                        left: titleLeftOffset,
+                    }}
+                >
+                    {title}
+                </Text>
+            </View>
+        </SafeAreaView>
+    );
+}
 
 Header.propTypes = {
     isDarkTheme: PropTypes.bool,

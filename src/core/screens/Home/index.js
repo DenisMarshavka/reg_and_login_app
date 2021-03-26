@@ -10,6 +10,9 @@ import {COLORS, SCENE_KEYS} from "../../constants";
 import Container from "../../components/Container";
 import Header from "../../components/Header";
 import {setUserAuthorizationStatusAction} from "../../../store/user/user.actions";
+import UsersList from "../../components/UsersList";
+import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
+import {faDoorOpen} from "@fortawesome/free-solid-svg-icons";
 
 const HomeScreen = ({ navigation, colorText }) => {
     const dispatch = useDispatch();
@@ -19,13 +22,23 @@ const HomeScreen = ({ navigation, colorText }) => {
             <Header title="Home" withBackHandler={false} />
 
             <Container style={styles.container}>
-                <Text>Home screen</Text>
+                <UsersList />
 
-                <TouchableOpacity onPress={() => {
-                    dispatch(setUserAuthorizationStatusAction(false));
-                    navigation && navigation.navigate && navigation.navigate(SCENE_KEYS.Unauthorized);
-                }}>
-                    <Text style={{color: COLORS[colorText]}}>Log Out</Text>
+                <TouchableOpacity
+                    style={styles.logOutButton}
+                    onPress={() => {
+                        dispatch(setUserAuthorizationStatusAction(false));
+                        navigation && navigation.navigate && navigation.navigate(SCENE_KEYS.Unauthorized);
+                    }}
+                >
+                    <FontAwesomeIcon
+                        icon={faDoorOpen}
+                        color={COLORS[colorText]}
+                        style={styles.logOutButtonIcon}
+                        size={26}
+                    />
+
+                    <Text style={[styles.logOutButtonText, {color: COLORS[colorText]}]}>Log Out</Text>
                 </TouchableOpacity>
             </Container>
         </>

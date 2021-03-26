@@ -28,11 +28,7 @@ export const getUsersListAction = () => async (dispatch) => {
         dispatch(setUserListLoadingStatus());
         const response = await getUsersListAPI();
 
-        console.log({
-            response,
-        });
-
-        dispatch(setUserList([]));
+        dispatch(setUserList(response));
     } catch (e) {
         dispatch(setUserListLError(e));
         console.log('@@@getUsersList', e);

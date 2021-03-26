@@ -31,5 +31,6 @@ export default StyleSheet.create({
         fontSize: 19,
         width: '100%',
         textAlign: 'center',
+        fontWeight: 'bold',
     },
 });
