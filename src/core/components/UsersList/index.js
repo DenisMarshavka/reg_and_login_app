@@ -57,7 +57,15 @@ const UsersList = ({
                             users.map((item = {}, key = 0) => (
                                 <View
                                     key={`user-item-${key}`}
-                                    style={[styles.listRow, {borderColor: COLORS[!isDarkTheme ? 'dark' : 'light']}]}
+                                    style={
+                                        [
+                                            styles.listRow,
+                                            {borderColor: COLORS[!isDarkTheme ? 'dark' : 'light']},
+                                            key === users.length - 1 && {
+                                                borderBottomWidth: 2,
+                                            },
+                                        ]
+                                    }
                                 >
                                     <View style={[styles.listRowBox, {borderRightColor: COLORS[!isDarkTheme ? 'dark' : 'light']}]}>
                                         <Text style={[styles.itemRowText, {color: COLORS[!isDarkTheme ? 'dark' : 'light']}]}>
@@ -77,7 +85,13 @@ const UsersList = ({
                                            ]
                                         }
                                     >
-                                        <Text style={[styles.itemRowText, {color: COLORS[!isDarkTheme ? 'dark' : 'light']}]}>
+                                        <Text
+                                            style={
+                                                [
+                                                    styles.itemRowText,
+                                                    {color: COLORS[!isDarkTheme ? 'dark' : 'light']},
+                                                ]
+                                        }>
                                             {
                                                 (
                                                     item.username && item.username.trim()

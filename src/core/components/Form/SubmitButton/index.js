@@ -13,6 +13,7 @@ const SubmitButton = ({
     textStyle,
     onPress,
     activeOpacity,
+    enable,
     title,
 }) => (
     <View
@@ -21,13 +22,14 @@ const SubmitButton = ({
             style,
             {
                 backgroundColor: COLORS[isDarkTheme ? 'light' : 'dark']
-            }
+            },
+            !enable && {opacity: .5},
         ]}
     >
         <TouchableOpacity
-            activeOpacity={activeOpacity}
+            activeOpacity={!enable ? 1 : activeOpacity}
             style={styles.elementTouchable}
-            onPress={onPress}
+            onPress={enable ? onPress : null}
         >
             <Text
                 style={[
@@ -42,6 +44,7 @@ const SubmitButton = ({
 
 SubmitButton.propTypes = {
     isDarkTheme: PropType.bool,
+    enable: PropType.bool,
 
     title: PropType.string,
     style: ViewPropTypes.style,
@@ -52,6 +55,7 @@ SubmitButton.propTypes = {
 
 SubmitButton.defaultProps = {
     isDarkTheme: false,
+    enable: true,
 
     style: {},
     title: 'Log In',

@@ -7,19 +7,26 @@ import {COLORS, SCENE_KEYS} from "../../constants";
 import {Container} from "../../components";
 import withSystemTheme from "../../../utils/HoC/withSystemTheme";
 import Header from "../../components/Header";
+import LogForm from "./Form";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 const LoginScreen = ({ navigation, colorText }) => (
-    <>
+    <KeyboardAwareScrollView
+        bounces={false}
+        enableOnAndroid
+        contentContainerStyle={styles.scrollContentContainer}
+        showsVerticalScrollIndicator={false}
+    >
         <Header title="Login" withBackHandler={false} />
 
         <Container style={styles.container}>
+            <LogForm />
 
-
-            <TouchableOpacity onPress={() => navigation?.navigate(SCENE_KEYS.Registration)}>
+            <TouchableOpacity style={styles.regButton} onPress={() => navigation?.navigate(SCENE_KEYS.Registration)}>
                 <Text style={{ color: COLORS[colorText] }}>Регистрация</Text>
             </TouchableOpacity>
         </Container>
-    </>
+    </KeyboardAwareScrollView>
 );
 
 LoginScreen.propTypes = {

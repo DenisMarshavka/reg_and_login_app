@@ -2,29 +2,24 @@ import React from "react";
 import {ViewPropTypes, Keyboard} from 'react-native';
 import * as Yup from "yup";
 import {useFormik} from "formik";
-import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 import styles from './styles'
 import {checkObjectValid} from "../../../../utils";
 import Input from "../../../components/Form/Input";
 import SubmitButton from "../../../components/Form/SubmitButton";
-import {Container} from "../../../components";
 
-const regSchema = Yup.object().shape({
+const logSchema = Yup.object().shape({
     email: Yup.string().email('Email is not valid').required('Email is required'),
     password: Yup.string()
         .min(5, 'Password should exist 5 symbols minimum')
         .max(25, 'Password should exist 25 symbols maximum')
         .required('Password is required'),
-    confirmPassword: Yup.string()
-        .required('Confirm password is required'),
 });
 
-const RegForm = ({ inputStyle }) => {
+const LogForm = ({ inputStyle }) => {
     const inputs = React.useMemo(() => ({
         email: '',
         password: '',
-        confirmPassword: '',
     }), []);
 
     const uniqInputsProps = React.useMemo(() => (
@@ -43,49 +38,20 @@ const RegForm = ({ inputStyle }) => {
                 secureTextEntry: true,
                 blurOnSubmit: false,
             },
-            confirmPassword: {
-                textContentType: 'none',
-                autoCompleteType: 'password',
-                autoCapitalize: 'none',
-                placeholder: 'Confirm password',
-                secureTextEntry: true,
-                blurOnSubmit: false,
-            },
         }
     ), []);
 
     const {
         errors, handleChange, resetForm,
         handleSubmit, values, touched, isValid,
-        setFieldError, handleBlur,
+        handleBlur,
     } = useFormik({
-        validationSchema: regSchema,
+        validationSchema: logSchema,
         initialValues: inputs,
         onSubmit: values => onSubmit(values),
     });
 
-    React.useEffect(() => {
-        if (
-            checkObjectValid(values, ['password', 'confirmPassword'], true)
-            && checkObjectValid(touched, ['password', 'confirmPassword'])
-        ) {
-            if (
-                touched.password && touched.confirmPassword
-                && values.password !== values.confirmPassword
-            ) {
-                setFieldError(
-                    'confirmPassword',
-                    'Confirm password is not the same as the Password field',
-                );
-            }
-        }
-    }, [values, touched, setFieldError]);
-
     const renderFields = React.useCallback(() => {
-        console.log({
-            'checkObjectValid(inputs)': checkObjectValid(inputs),
-        });
-
         if (checkObjectValid(inputs)) {
             return Object.keys(inputs).map((inputName = '', index = 0) => (
                 <Input
@@ -124,33 +90,33 @@ const RegForm = ({ inputStyle }) => {
         isValid && checkObjectValid(values)
         && checkObjectValid(touched)
         && !Object.keys(errors).length
-        && touched.password && touched.confirmPassword
+        && touched.password
         && touched.email
-        && values.password && values.confirmPassword
+        && values.password
         && values.email
     ), [isValid, touched, values, errors]);
 
     return (
-        <Container style={styles.container}>
+        <>
             {renderFields()}
 
             <SubmitButton
                 enable={inputsValid}
                 style={styles.submitBtn}
                 onPress={handleSubmit}
-                title="Sign Up"
+                title="Sign In"
                 activeOpacity={.5}
             />
-        </Container>
+        </>
     );
 }
 
-RegForm.propTypes = {
+LogForm.propTypes = {
     inputStyle: ViewPropTypes.style,
 };
 
-RegForm.defaultProps = {
+LogForm.defaultProps = {
     inputStyle: {},
 };
 
-export default React.memo(RegForm);
+export default React.memo(LogForm);
