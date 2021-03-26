@@ -34,9 +34,16 @@ const SplashScreen = ({ navigation, colorText }) => {
     }, [dispatch]);
 
     React.useEffect(() => {
-        loading && userAuthorized && navigation
-        && navigation.navigate && navigation.navigate(SCENE_KEYS.Authorized);
-    }, [userAuthorized, loading]);
+        if (navigation && navigation.navigate) {
+            navigation.navigate(
+                SCENE_KEYS[
+                    !loading && userAuthorized
+                        ? 'Authorized'
+                        : 'Login'
+                    ]
+            );
+        }
+    }, [userAuthorized, loading, navigation]);
 
     return (
         <Container style={styles.container}>
@@ -58,5 +65,10 @@ SplashScreen.defaultProps = {
     navigation: {},
     colorText: 'light',
 };
+
+SplashScreen.navigationOptions = () => ({
+    headerShown: false,
+    swipeEnabled: false,
+});
 
 export default React.memo(withSystemTheme(SplashScreen));

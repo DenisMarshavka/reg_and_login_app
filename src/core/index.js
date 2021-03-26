@@ -7,8 +7,7 @@ import HomeScreen from "./screens/Home";
 import SplashScreen from "./screens/Splash";
 import RegistrationScreen from "./screens/Registration";
 
-const UnauthorizedStack = createStackNavigator(
-    {
+const UnauthorizedStack = createStackNavigator({
         [SCENE_KEYS.Splash]: {
             screen: SplashScreen,
         },
@@ -21,30 +20,22 @@ const UnauthorizedStack = createStackNavigator(
     },
     {
         initialRouteName: 'Splash',
-        headerShown: false,
-        gestureEnabled: false,
-    },
+        headerMode: 'none',
+        defaultNavigationOptions: {
+            gestureEnabled: false,
+        },
+    }
 );
 
-UnauthorizedStack.defaultProps = {
-    headerMode: 'none',
-};
-
-const AuthorizedStack = createStackNavigator(
-    {
+const AuthorizedStack = createStackNavigator({
         [SCENE_KEYS.Home]: {
             screen: HomeScreen,
         },
     },
     {
-        headerShown: false,
-        gestureEnabled: false,
+        headerMode: 'none',
     },
 );
-
-AuthorizedStack.defaultProps = {
-    headerMode: 'none',
-};
 
 const AppNavigator = createSwitchNavigator(
     {

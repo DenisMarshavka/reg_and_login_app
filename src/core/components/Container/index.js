@@ -25,9 +25,10 @@ const Container = ({ children, isDarkTheme, style, ...restProps }) => (
 
 Container.propTypes = {
     children: PropTypes.oneOfType([
-        PropTypes.arrayOf(PropTypes.element),
-        PropTypes.shape(),
-    ]).isRequired,
+        PropTypes.shape({}),
+        PropTypes.arrayOf(PropTypes.shape({})),
+        PropTypes.bool,
+    ]),
     isDarkTheme: PropTypes.bool,
     style: ViewPropTypes.style,
 };

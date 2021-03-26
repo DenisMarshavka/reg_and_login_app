@@ -1,9 +1,12 @@
 import {StyleSheet} from 'react-native';
+import {SIZES} from "../../constants";
 
 export default StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
+        paddingTop: 65,
+        paddingHorizontal: SIZES.paddingHorizontal,
+
+        justifyContent: 'flex-start',
         alignItems: 'center',
     },
 });

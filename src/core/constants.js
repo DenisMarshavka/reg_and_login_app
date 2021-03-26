@@ -11,7 +11,8 @@ export const SCENE_KEYS = {
 export const COLORS = {
     'dark': '#000',
     'light': '#fff',
-    'primary': 'green',
+    'gray': '#ccc',
+    'error': 'red',
 };
 
 export const SIZES = {

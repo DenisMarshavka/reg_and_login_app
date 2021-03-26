@@ -1,4 +1,4 @@
-import {SET_USERS, SET_USERS_ERROR, SET_USERS_LOADER_STATUS} from "./app.types";
+import {SET_SPLASH_STATUS, SET_USERS, SET_USERS_ERROR, SET_USERS_LOADER_STATUS} from "./app.types";
 
 const initState = {
     splashLoading: true,
@@ -10,6 +10,12 @@ const initState = {
 
 const app = (state = initState, action = {}) => {
     switch (action.type) {
+        case SET_SPLASH_STATUS:
+            return {
+                ...state,
+                splashLoading: action.payload,
+            };
+
         case SET_USERS_LOADER_STATUS:
             return {
                 ...state,
