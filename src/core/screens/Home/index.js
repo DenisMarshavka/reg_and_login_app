@@ -10,7 +10,7 @@ import {COLORS, SCENE_KEYS} from "../../constants";
 import Container from "../../components/Container";
 import Header from "../../components/Header";
 import {setUserAuthorizationStatusAction} from "../../../store/user/user.actions";
-import UsersList from "../../components/UsersList";
+import UsersList from "./UsersList";
 import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
 import {faDoorOpen} from "@fortawesome/free-solid-svg-icons";
 

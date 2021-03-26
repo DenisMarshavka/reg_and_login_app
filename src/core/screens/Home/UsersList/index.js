@@ -4,9 +4,9 @@ import PropType from "prop-types";
 import {useDispatch, useSelector} from "react-redux";
 
 import styles from './styles'
-import withSystemTheme from "../../../utils/HoC/withSystemTheme";
-import {COLORS} from "../../constants";
-import {getUsersListAction} from "../../../store/app/app.actions";
+import withSystemTheme from "../../../../utils/HoC/withSystemTheme";
+import {COLORS} from "../../../constants";
+import {getUsersListAction} from "../../../../store/app/app.actions";
 
 
 const UsersList = ({

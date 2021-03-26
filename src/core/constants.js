@@ -1,10 +1,11 @@
-import {Dimensions} from 'react-native';
+import {Dimensions, Platform} from 'react-native';
+
+export const IOS = Platform.OS === 'ios';
 
 export const SCENE_KEYS = {
     Unauthorized: 'Unauthorized',
     Authorized: 'Authorized',
 
-    Splash: 'Splash',
     Login: 'Login',
     Registration: 'Registration',
     Home: 'Home',

@@ -4,13 +4,9 @@ import { createStackNavigator } from 'react-navigation-stack';
 import {SCENE_KEYS} from "./constants";
 import LoginScreen from "./screens/Login";
 import HomeScreen from "./screens/Home";
-import SplashScreen from "./screens/Splash";
 import RegistrationScreen from "./screens/Registration";
 
 const UnauthorizedStack = createStackNavigator({
-        [SCENE_KEYS.Splash]: {
-            screen: SplashScreen,
-        },
         [SCENE_KEYS.Login]: {
             screen: LoginScreen,
         },
@@ -19,7 +15,7 @@ const UnauthorizedStack = createStackNavigator({
         },
     },
     {
-        initialRouteName: 'Splash',
+        initialRouteName: SCENE_KEYS.Login,
         headerMode: 'none',
         defaultNavigationOptions: {
             gestureEnabled: false,
@@ -39,11 +35,11 @@ const AuthorizedStack = createStackNavigator({
 
 const AppNavigator = createSwitchNavigator(
     {
-        Unauthorized: { screen: UnauthorizedStack },
-        Authorized: { screen: AuthorizedStack },
+        [SCENE_KEYS.Unauthorized]: { screen: UnauthorizedStack },
+        [SCENE_KEYS.Authorized]: { screen: AuthorizedStack },
     },
     {
-        initialRouteName: 'Unauthorized',
+        initialRouteName: SCENE_KEYS.Unauthorized,
         transitionSpec: {
             duration: 0,
         },

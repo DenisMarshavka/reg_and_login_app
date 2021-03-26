@@ -1,3 +1,5 @@
+import {Animated} from 'react-native';
+
 export const checkObjectValid = (object = {}, existingParams = [], checkToAllFill = false) => {
     let isValid = object && typeof object === 'object'
         && Object.keys(object) && Object.keys(object).length;
@@ -60,3 +62,21 @@ export const asyncStorageKeyEvents = async (
         console.log('@@@asyncStorageKeyEvents:', e);
     }
 }
+
+export const goAnimateEffect = (
+    focusEffect = null,
+    toValue = 1,
+    duration = 100,
+    useNativeDriver = false,
+    thenCallBack = () => null
+) => {
+    if (!focusEffect) return null;
+
+    Animated.timing(focusEffect, {
+        toValue,
+        duration,
+        useNativeDriver,
+    }).start();
+
+    setTimeout(thenCallBack, duration);
+};
