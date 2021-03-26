@@ -1,5 +1,6 @@
 const initState = {
     globalUser: {},
+    isAuthorized: true,
 };
 
 const user = (state = initState, action = {}) => {

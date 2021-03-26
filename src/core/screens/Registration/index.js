@@ -27,7 +27,7 @@ const RegistrationScreen = ({ isDarkTheme, colorText, navigation }) => (
 RegistrationScreen.propTypes = {
     isDarkTheme: PropType.bool,
     colorText: PropType.oneOf(['light', 'dark']),
-    navigation: PropType.shape().isRequired,
+    navigation: PropType.shape({}).isRequired,
 };
 
 RegistrationScreen.defaultProps = {

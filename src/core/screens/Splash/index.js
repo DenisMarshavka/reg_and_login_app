@@ -1,35 +1,42 @@
 import React from 'react';
 import {ActivityIndicator, LogBox} from 'react-native';
 import PropType from 'prop-types';
+import {useDispatch, useSelector} from "react-redux";
 
 import styles from './styles';
 import {Container} from "../../components";
 import {COLORS, SCENE_KEYS} from "../../constants";
 import withSystemTheme from "../../../utils/HoC/withSystemTheme";
+import {setSplashStatusAction} from "../../../store/app/app.actions";
 
 LogBox.ignoreLogs([
     'Sending `onAnimatedValueUpdate` with no listeners registered',
     'RCTBridge required dispatch_sync to load RCTDevLoadingView. This may lead to deadlocks',
 ]);
 
-const SplashScreen = ({ navigation, isDarkTheme, colorText }) => {
+const SplashScreen = ({ navigation, colorText }) => {
     const loadingTime = React.useRef(0);
-    const [loading, setLoading] = React.useState(true);
+
+    const { loading = true, userAuthorized = false } = useSelector(({ app = {}, user = {} }) => ({
+        loading: app.splashLoading,
+        userAuthorized: user.isAuthorized,
+    }));
+    const dispatch = useDispatch();
 
     React.useEffect(() => {
         loadingTime.current = setTimeout(() => {
-            setLoading(true);
+            dispatch(setSplashStatusAction(false));
         }, 1500);
 
         return () => {
             clearTimeout(loadingTime.current);
         };
-    }, []);
+    }, [dispatch]);
 
     React.useEffect(() => {
-        navigation && navigation.navigate
-        && navigation.navigate(SCENE_KEYS.Login);
-    }, [navigation]);
+        loading && userAuthorized && navigation
+        && navigation.navigate && navigation.navigate(SCENE_KEYS.Authorized);
+    }, [userAuthorized, loading]);
 
     return (
         <Container style={styles.container}>
@@ -43,13 +50,11 @@ const SplashScreen = ({ navigation, isDarkTheme, colorText }) => {
 };
 
 SplashScreen.propTypes = {
-    navigation: PropType.shape(),
-    isDarkTheme: PropType.bool,
+    navigation: PropType.shape({}),
     colorText: PropType.oneOf(['light', 'dark']),
 };
 
 SplashScreen.defaultProps = {
-    isDarkTheme: false,
     navigation: {},
     colorText: 'light',
 };

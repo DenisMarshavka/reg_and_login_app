@@ -4,8 +4,10 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import { combineReducers } from 'redux';
 
 import user from "./user/user.reducer";
+import app from "./app/app.reducer";
 
 const rootReducer = combineReducers({
+    app,
     user,
 });
 

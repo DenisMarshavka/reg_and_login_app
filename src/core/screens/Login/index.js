@@ -23,7 +23,7 @@ const LoginScreen = ({ navigation, colorText }) => (
 );
 
 LoginScreen.propTypes = {
-    navigation: PropType.shape().isRequired,
+    navigation: PropType.shape({}).isRequired,
     isDarkTheme: PropType.bool,
     colorText: PropType.oneOf(['light', 'dark']),
 };
