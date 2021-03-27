@@ -24,11 +24,7 @@ const Container = ({ children, isDarkTheme, style, ...restProps }) => (
 );
 
 Container.propTypes = {
-    children: PropTypes.oneOfType([
-        PropTypes.shape({}),
-        PropTypes.arrayOf(PropTypes.shape({})),
-        PropTypes.bool,
-    ]),
+    children: PropTypes.node.isRequired,
     isDarkTheme: PropTypes.bool,
     style: ViewPropTypes.style,
 };

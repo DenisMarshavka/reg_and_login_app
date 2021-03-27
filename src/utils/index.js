@@ -64,7 +64,7 @@ export const asyncStorageKeyEvents = async (
             } else console.log('@@@asyncStorageKeyEvents@method Error params:', { method });
         } else console.log('@@@asyncStorageKeyEvents Error params:', { method, key, params, callback });
 
-        callback(data);
+        if (callback && typeof callback === 'function') callback(data);
         return data;
     } catch (e) {
         console.log('@@@asyncStorageKeyEvents:', e);
@@ -118,9 +118,14 @@ export const checkUserExist = async (values = {}, withPassCheck = false) => {
                 userIndex,
                 usersList,
             };
-        } else console.log('@@@checkUserExist Error params:', { values });
+        } else {
+            console.log('@@@checkUserExist Error params:', { values });
+            return {};
+        }
     } catch (e) {
         console.log('@@@checkUserExist', e);
+
+        return {};
     }
 };
 

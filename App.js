@@ -20,6 +20,7 @@ import Splash from "./src/core/components/Splash";
 LogBox.ignoreLogs([
     'Sending `onAnimatedValueUpdate` with no listeners registered',
     'RCTBridge required dispatch_sync to load RCTDevLoadingView. This may lead to deadlocks',
+    'Require cycle: node_modules/react-native-crypto/index.js -> node_modules/react-native-randombytes/index.js -> node_modules/sjcl/sjcl.js -> node_modules/react-native-crypto/index.js',
 ]);
 
 const AppNavigation = createAppContainer(AppNavigator);

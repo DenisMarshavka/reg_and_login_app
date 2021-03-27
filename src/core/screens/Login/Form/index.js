@@ -70,7 +70,7 @@ const LogForm = ({ inputStyle }) => {
                 { token: newJWT },
                 () => {
                     resetForm();
-                    dispatch(setUserAuthorizationStatusAction(true, newJWT))
+                    dispatch(setUserAuthorizationStatusAction(true, newJWT, values.email))
                 },
             );
         } else {

@@ -1,12 +1,13 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {Text} from 'react-native';
 import PropType from 'prop-types';
 import {useDispatch} from "react-redux";
+import AsyncStorage from '@react-native-community/async-storage';
 
 import styles from './styles';
 import withSystemTheme from "../../../utils/HoC/withSystemTheme";
 import {TouchableOpacity} from "react-native-gesture-handler";
-import {COLORS, SCENE_KEYS} from "../../constants";
+import {ASYNC_STORAGE_KEYS, COLORS} from "../../constants";
 import Container from "../../components/Container";
 import Header from "../../components/Header";
 import {setUserAuthorizationStatusAction} from "../../../store/user/user.actions";
@@ -14,7 +15,7 @@ import UsersList from "./UsersList";
 import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
 import {faDoorOpen} from "@fortawesome/free-solid-svg-icons";
 
-const HomeScreen = ({ navigation, colorText }) => {
+const HomeScreen = ({ colorText }) => {
     const dispatch = useDispatch();
 
     return (
@@ -26,9 +27,9 @@ const HomeScreen = ({ navigation, colorText }) => {
 
                 <TouchableOpacity
                     style={styles.logOutButton}
-                    onPress={() => {
+                    onPress={async () => {
                         dispatch(setUserAuthorizationStatusAction(false));
-                        navigation && navigation.navigate && navigation.navigate(SCENE_KEYS.Unauthorized);
+                        await AsyncStorage.removeItem(ASYNC_STORAGE_KEYS.userToken);
                     }}
                 >
                     <FontAwesomeIcon
@@ -50,7 +51,6 @@ HomeScreen.navigationOptions = () => ({
 });
 
 HomeScreen.propTypes = {
-    navigation: PropType.shape({}).isRequired,
     colorText: PropType.oneOf(['light', 'dark']),
 };
 

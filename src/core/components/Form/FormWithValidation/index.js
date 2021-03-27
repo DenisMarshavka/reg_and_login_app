@@ -94,7 +94,10 @@ const FormWithValidation = ({
 }
 
 FormWithValidation.propTypes = {
-    children: PropsType.shape({}),
+    children: PropsType.oneOfType([
+        PropsType.node,
+        PropsType.shape({}),
+    ]),
     inputs: PropsType.shape({}).isRequired,
     uniqInputsProps: PropsType.shape({}),
     onSubmit: PropsType.func.isRequired,

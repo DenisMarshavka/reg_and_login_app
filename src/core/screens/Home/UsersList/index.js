@@ -46,7 +46,7 @@ const UsersList = ({
                             </View>
 
                             <View style={[styles.listRowBox, {width: '75%', borderRightWidth: 0}]}>
-                                <Text style={styles.listHeadTitle}>
+                                <Text style={[styles.listHeadTitle, {color: COLORS[colorText]}]}>
                                     User Name
                                 </Text>
                             </View>

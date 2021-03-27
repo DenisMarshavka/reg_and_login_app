@@ -128,7 +128,7 @@ const RegForm = ({ inputStyle }) => {
                     'set',
                     ASYNC_STORAGE_KEYS.userToken,
                     { token: userJWK },
-                    () => dispatch(setUserAuthorizationStatusAction(true, userJWK)),
+                    () => dispatch(setUserAuthorizationStatusAction(true, userJWK, newUser.email)),
                 );
             }
         } else console.log('@@@onSubmit Error params:', {values});

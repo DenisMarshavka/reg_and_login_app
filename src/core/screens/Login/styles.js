@@ -6,12 +6,11 @@ export default StyleSheet.create({
         backgroundColor: COLORS.light,
     },
     container: {
-        maxHeight: 450,
         justifyContent: 'flex-start',
         alignItems: 'center',
-        paddingBottom: 35,
     },
     regButton: {
         marginTop: 20,
+        paddingBottom: 35,
     },
 });

@@ -5,10 +5,11 @@ import {useDispatch, useSelector} from "react-redux";
 
 import styles from './styles';
 import {Container} from "../index";
-import {COLORS, IOS, SCENE_KEYS, SIZES} from "../../constants";
+import {ASYNC_STORAGE_KEYS, COLORS, IOS, SCENE_KEYS, SIZES} from "../../constants";
 import withSystemTheme from "../../../utils/HoC/withSystemTheme";
 import {setSplashStatusAction} from "../../../store/app/app.actions";
-import {goAnimateEffect} from "../../../utils";
+import {asyncStorageKeyEvents, checkUserExist, goAnimateEffect, JWT} from "../../../utils";
+import {setUserAuthorizationStatusAction} from "../../../store/user/user.actions";
 
 const Splash = ({ navigate, colorText }) => {
     const loadingTime = React.useRef(0);
@@ -21,27 +22,56 @@ const Splash = ({ navigate, colorText }) => {
     }));
     const dispatch = useDispatch();
 
+    React.useEffect(() => () => {
+        dispatch(setSplashStatusAction(true));
+    }, [dispatch]);
+
     React.useEffect(() => {
         if (!loading) {
             animateTime.current = setTimeout(() => {
                 goAnimateEffect(translateY, -SIZES.heightDevice, 1000, IOS);
-            }, 2500);
+            }, 500);
         }
 
         return () => {
             clearTimeout(animateTime.current);
         }
-    }, [loading]);
+    }, [loading, animateTime]);
 
     React.useEffect(() => {
-        loadingTime.current = setTimeout(() => {
-            dispatch(setSplashStatusAction(false));
-        }, 1500);
+        try {
+            (async () => {
+                let userToken = '';
+                const oldJWT = await asyncStorageKeyEvents(
+                    'get',
+                    ASYNC_STORAGE_KEYS.userToken,
+                );
+                userToken = oldJWT && oldJWT.result && oldJWT.result
+                    && oldJWT.result.token && oldJWT.result.token.trim();
+
+                const userCredits = userToken && JWT({}, userToken).decode();
+                const {userIndex = -1} = await checkUserExist(userCredits, true);
+
+                if (userIndex > -1 && userToken && userToken.trim()) {
+                    dispatch(setUserAuthorizationStatusAction(true, userToken, userCredits.email));
+                } else dispatch(setUserAuthorizationStatusAction(false));
+
+                loadingTime.current = setTimeout(() => {
+                    dispatch(setSplashStatusAction(false));
+                }, 500);
+            })();
+        } catch (e) {
+            console.log('@@@splash@autoLogin', e);
+
+            loadingTime.current = setTimeout(() => {
+                dispatch(setSplashStatusAction(false));
+            }, 500);
+        }
 
         return () => {
             clearTimeout(loadingTime.current);
         };
-    }, [dispatch]);
+    }, [dispatch, loadingTime]);
 
     React.useEffect(() => {
         navigate && navigate(
