@@ -3,8 +3,11 @@ import {ViewPropTypes} from 'react-native';
 import * as Yup from "yup";
 import {useFormik} from "formik";
 
-import {checkObjectValid} from "../../../../utils";
+import {asyncStorageKeyEvents, checkObjectValid, checkUserExist, JWT} from "../../../../utils";
 import FormWithValidation from "../../../components/Form/FormWithValidation";
+import {ASYNC_STORAGE_KEYS} from "../../../constants";
+import {useDispatch} from "react-redux";
+import {setUserAuthorizationStatusAction} from "../../../../store/user/user.actions";
 
 const regSchema = Yup.object().shape({
     email: Yup.string().email('Email is not valid').required('Email is required'),
@@ -17,6 +20,8 @@ const regSchema = Yup.object().shape({
 });
 
 const RegForm = ({ inputStyle }) => {
+    const dispatch = useDispatch();
+
     const inputs = React.useMemo(() => ({
         email: '',
         password: '',
@@ -77,11 +82,57 @@ const RegForm = ({ inputStyle }) => {
         }
     }, [values, touched, setFieldError]);
 
-    const onSubmit = React.useCallback((values = {}) => {
-        console.log({
-            values,
-        });
-    }, []);
+    const onSubmit = React.useCallback(async (values = {}) => {
+        let newUsersList = [];
+        const {usersList = [], userIndex: existingSomeUser = -1} = await checkUserExist(values);
+        const userJWK = JWT(values).encode();
+        let newUser = {};
+
+        if (checkObjectValid(values, ['email', 'password'])) {
+            newUser = {
+                email: values.email,
+                password: values.password,
+            };
+
+            if (!usersList) {
+                newUsersList = [];
+
+                newUsersList.push({
+                    ...newUser,
+                });
+            } else {
+                if (existingSomeUser > -1) {
+                    setFieldError(
+                        'email',
+                        'The Email exists, please enter new Email'
+                    );
+
+                    return;
+                } else {
+                    newUsersList = [
+                        ...usersList,
+                        {
+                            ...newUser,
+                        },
+                    ];
+                }
+
+                await asyncStorageKeyEvents(
+                    'set',
+                    ASYNC_STORAGE_KEYS.usersRegList,
+                    [...newUsersList],
+                    () => resetForm(),
+                );
+
+                await asyncStorageKeyEvents(
+                    'set',
+                    ASYNC_STORAGE_KEYS.userToken,
+                    { token: userJWK },
+                    () => dispatch(setUserAuthorizationStatusAction(true, userJWK)),
+                );
+            }
+        } else console.log('@@@onSubmit Error params:', {values});
+    }, [setFieldError, values, resetForm]);
 
     return (
         <FormWithValidation

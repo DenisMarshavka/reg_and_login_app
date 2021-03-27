@@ -5,6 +5,11 @@ import {useFormik} from "formik";
 
 import styles from './styles';
 import FormWithValidation from "../../../components/Form/FormWithValidation";
+import {asyncStorageKeyEvents, checkObjectValid, checkUserExist, JWT} from "../../../../utils";
+import {ASYNC_STORAGE_KEYS} from "../../../constants";
+import Error from "../../../components/Form/Error";
+import {setUserAuthorizationStatusAction} from "../../../../store/user/user.actions";
+import {useDispatch} from "react-redux";
 
 const logSchema = Yup.object().shape({
     email: Yup.string().email('Email is not valid').required('Email is required'),
@@ -15,6 +20,9 @@ const logSchema = Yup.object().shape({
 });
 
 const LogForm = ({ inputStyle }) => {
+    const dispatch = useDispatch();
+    const [errorMessage, setErrorMessage] = React.useState('');
+
     const inputs = React.useMemo(() => ({
         email: '',
         password: '',
@@ -42,18 +50,34 @@ const LogForm = ({ inputStyle }) => {
     const {
         errors, handleChange, resetForm,
         handleSubmit, values, touched, isValid,
-        handleBlur,
+        handleBlur, setFieldError,
     } = useFormik({
         validationSchema: logSchema,
         initialValues: inputs,
         onSubmit: values => onSubmit(values),
     });
 
-    const onSubmit = React.useCallback((values = {}) => {
-        console.log({
-            values,
-        });
-    }, []);
+    const onSubmit = React.useCallback(async (values = {}) => {
+        if (checkObjectValid(values, ['email', 'password'])) {
+            const { userIndex = -1 } = await checkUserExist(values, true);
+            const newJWT = JWT(values).encode();
+
+            if (userIndex === -1) {
+                setFieldError('email', 'Email or Password is not valid, please try again');
+            } else await asyncStorageKeyEvents(
+                'set',
+                ASYNC_STORAGE_KEYS.userToken,
+                { token: newJWT },
+                () => {
+                    resetForm();
+                    dispatch(setUserAuthorizationStatusAction(true, newJWT))
+                },
+            );
+        } else {
+            setErrorMessage('Something went wrong, please try again later');
+            console.log('@@@Auth@onSubmit Error params:', { values });
+        }
+    }, [setErrorMessage, setFieldError, resetForm]);
 
     return (
         <FormWithValidation
@@ -66,9 +90,16 @@ const LogForm = ({ inputStyle }) => {
             handleChange={handleChange}
             values={values}
             touched={touched}
-            isValid={isValid}
+            setInitialError={setErrorMessage}
+            isValid={isValid && !errorMessage}
             handleBlur={handleBlur}
-        />
+        >
+            {
+                errorMessage && errorMessage.trim() ? (
+                    <Error errorText={errorMessage} style={styles.bottomError}/>
+                ) : null
+            }
+        </FormWithValidation>
     );
 }
 

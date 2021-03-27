@@ -8,7 +8,7 @@ import styles from './styles';
 import withSystemTheme from "../../../utils/HoC/withSystemTheme";
 import {COLORS} from "../../constants";
 
-const Header = ({ withBackHandler, navigation, title, isDarkTheme, style, colorText }) => {
+const Header = ({ withBackHandler, navigation, title, isDarkTheme, style, colorText, onLayout }) => {
     const titleLeftOffset = React.useMemo(() => {
         let width = 0;
 
@@ -22,6 +22,7 @@ const Header = ({ withBackHandler, navigation, title, isDarkTheme, style, colorT
 
     return (
         <SafeAreaView
+            onLayout={onLayout}
             style={
                 [
                     styles.safeAreaView,
@@ -81,6 +82,7 @@ Header.propTypes = {
     withBackHandler: PropTypes.bool,
     style: ViewPropTypes.style,
     title: PropTypes.string,
+    onLayout: PropTypes.func,
     navigation: PropTypes.shape(),
     colorText: PropTypes.oneOf(['light', 'dark']),
 };
@@ -89,6 +91,7 @@ Header.defaultProps = {
     isDarkTheme: false,
     withBackHandler: true,
     style: {},
+    onLayout: () => null,
     title: '',
     navigation: {},
     colorText: 'light',

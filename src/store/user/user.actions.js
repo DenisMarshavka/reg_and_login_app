@@ -1,7 +1,10 @@
 import {SET_USER_AUTHORIZATION_STATUS} from "./user.types";
 
 //User actions
-export const setUserAuthorizationStatusAction = (payload = true) => ({
+export const setUserAuthorizationStatusAction = (status = true, token = '') => ({
     type: SET_USER_AUTHORIZATION_STATUS,
-    payload,
+    payload: {
+        status,
+        token,
+    },
 });

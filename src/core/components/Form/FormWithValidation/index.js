@@ -20,6 +20,7 @@ const FormWithValidation = ({
     touched,
     isValid,
     handleBlur,
+    setInitialError,
 
     wrapperStyle,
     submitStyle,
@@ -41,7 +42,11 @@ const FormWithValidation = ({
                         },
                     ]}
                     value={values[inputName]}
-                    onChangeText={handleChange(inputName)}
+                    onChangeText={(val = '') => {
+                        handleChange(inputName)(val);
+
+                        !isValid && setInitialError('');
+                    }}
                     onBlur={(props) => handleBlur(inputName)(props)}
                     onSubmitEditing={() => Keyboard.dismiss()}
                     {...(uniqInputsProps[inputName] || {})}
@@ -52,6 +57,7 @@ const FormWithValidation = ({
         values, errors,
         uniqInputsProps, inputs,
         handleChange, touched,
+        setInitialError,
     ]);
 
     const inputsValid = React.useMemo(() => {
@@ -59,7 +65,7 @@ const FormWithValidation = ({
 
         if (checkObjectValid(touched)) {
             for (let input of Object.keys(touched)) {
-                if (allInputsTouched) allInputsTouched = touched[input];
+                if (!allInputsTouched) allInputsTouched = touched[input];
             }
         }
 
@@ -74,8 +80,6 @@ const FormWithValidation = ({
         <Container style={[styles.container, wrapperStyle]}>
             {renderFields()}
 
-            {children}
-
             <SubmitButton
                 enable={inputsValid}
                 style={[styles.submitBtn, submitStyle]}
@@ -83,6 +87,8 @@ const FormWithValidation = ({
                 title={submitTitle}
                 activeOpacity={.5}
             />
+
+            {children}
         </Container>
     );
 }
@@ -99,6 +105,7 @@ FormWithValidation.propTypes = {
     touched: PropsType.shape({}),
     isValid: PropsType.bool,
     handleBlur: PropsType.func,
+    setInitialError: PropsType.func,
 
     wrapperStyle: ViewPropTypes.style,
     submitStyle: ViewPropTypes.style,
@@ -115,6 +122,7 @@ FormWithValidation.defaultProps = {
     touched: {},
     isValid: false,
     handleBlur: () => null,
+    setInitialError: () => null,
 
     wrapperStyle: {},
     submitStyle: {},

@@ -1,4 +1,7 @@
 import {Animated} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+import * as jwt from 'jwt-simple';
+import {ASYNC_STORAGE_KEYS, secretJWKKey} from "../core/constants";
 
 export const checkObjectValid = (object = {}, existingParams = [], checkToAllFill = false) => {
     let isValid = object && typeof object === 'object'
@@ -47,8 +50,13 @@ export const asyncStorageKeyEvents = async (
 
                 data.result = (value && JSON.parse(value)) || null;
             } else if (
-                method === 'set' && params && typeof params === 'object'
-                && Object.keys(params) && Object.keys(params).length
+                method === 'set' && params
+                && (
+                    (
+                        typeof params === 'object'
+                        && Object.keys(params) && Object.keys(params).length
+                    ) || Array.isArray(params) && params.length
+                )
             ) {
                 await AsyncStorage.setItem(key, JSON.stringify(params));
             } else if (AsyncStorage[`${method}`]) {
@@ -79,4 +87,64 @@ export const goAnimateEffect = (
     }).start();
 
     setTimeout(thenCallBack, duration);
+};
+
+export const checkUserExist = async (values = {}, withPassCheck = false) => {
+    let userIndex = -1;
+    let usersList = [];
+
+    try {
+        if (checkObjectValid(values, ['email', 'password'], true)) {
+            usersList = await asyncStorageKeyEvents('get', ASYNC_STORAGE_KEYS.usersRegList);
+
+            usersList = usersList && usersList.result && Array.isArray(usersList.result)
+                ? usersList.result
+                : [];
+
+            userIndex = usersList.findIndex((user) => (
+                user && checkObjectValid(user, ['email'])
+                && user.email.trim() && values
+                && checkObjectValid(values, ['email'])
+                && values.email === user.email && (
+                    !withPassCheck
+                    || (
+                        withPassCheck
+                        && values.password === user.password
+                    )
+                )
+            ));
+
+            return {
+                userIndex,
+                usersList,
+            };
+        } else console.log('@@@checkUserExist Error params:', { values });
+    } catch (e) {
+        console.log('@@@checkUserExist', e);
+    }
+};
+
+export const JWT = (values = {}, token = '') => {
+    try {
+        let result = null;
+
+        return {
+            encode: () => {
+                if (values && checkObjectValid(values)) {
+                    result = jwt.encode(values, secretJWKKey);
+                } else console.log('@@@JWT@encode Error params: ', {values});
+
+                return result;
+            },
+            decode: () => {
+                if (token && typeof token === 'string' && token.trim()) {
+                    result = jwt.decode(token, secretJWKKey);
+                } else console.log('@@@JWT@decode Error params: ', {token});
+
+                return result;
+            },
+        };
+    } catch (e) {
+        console.log('@@@JWT', e);
+    }
 };

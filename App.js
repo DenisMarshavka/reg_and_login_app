@@ -10,6 +10,7 @@ import React from 'react';
 import {createAppContainer, NavigationActions} from 'react-navigation';
 import { Provider } from 'react-redux';
 import {LogBox} from "react-native";
+import './shim.js';
 
 import AppNavigator from "./src/core";
 import navigationUtils from "./src/core/navigationUtils";

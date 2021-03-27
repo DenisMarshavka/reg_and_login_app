@@ -18,6 +18,13 @@ export const COLORS = {
     'error': 'red',
 };
 
+export const ASYNC_STORAGE_KEYS = {
+    'userToken': 'USER_TOKEN',
+    'usersRegList': 'USERS_REG_LIST',
+};
+
+export const secretJWKKey = Buffer.from('fe1a1915a379f3be5394b64d14794932', 'hex');
+
 export const SIZES = {
     paddingHorizontal: 25,
     widthDevice: Dimensions.get('screen').width,
