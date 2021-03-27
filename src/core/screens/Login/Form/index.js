@@ -1,12 +1,10 @@
 import React from "react";
-import {ViewPropTypes, Keyboard} from 'react-native';
+import {ViewPropTypes} from 'react-native';
 import * as Yup from "yup";
 import {useFormik} from "formik";
 
-import styles from './styles'
-import {checkObjectValid} from "../../../../utils";
-import Input from "../../../components/Form/Input";
-import SubmitButton from "../../../components/Form/SubmitButton";
+import styles from './styles';
+import FormWithValidation from "../../../components/Form/FormWithValidation";
 
 const logSchema = Yup.object().shape({
     email: Yup.string().email('Email is not valid').required('Email is required'),
@@ -51,63 +49,26 @@ const LogForm = ({ inputStyle }) => {
         onSubmit: values => onSubmit(values),
     });
 
-    const renderFields = React.useCallback(() => {
-        if (checkObjectValid(inputs)) {
-            return Object.keys(inputs).map((inputName = '', index = 0) => (
-                <Input
-                    key={`input-${inputName}-${index}`}
-                    error={touched[inputName] && errors[inputName]}
-                    style={[
-                        inputStyle,
-                        errors[inputName] && touched[inputName] && {
-                            borderColor: 'red'
-                        },
-                        index === 0 && {
-                            marginTop: 0,
-                        },
-                    ]}
-                    value={values[inputName]}
-                    onChangeText={handleChange(inputName)}
-                    onBlur={(props) => handleBlur(inputName)(props)}
-                    onSubmitEditing={() => Keyboard.dismiss()}
-                    {...(uniqInputsProps[inputName] || {})}
-                />
-            ));
-        }
-    }, [
-        values, errors,
-        uniqInputsProps, inputs,
-        handleChange, touched,
-    ]);
-
     const onSubmit = React.useCallback((values = {}) => {
         console.log({
             values,
         });
     }, []);
 
-    const inputsValid = React.useMemo(() => !!(
-        isValid && checkObjectValid(values)
-        && checkObjectValid(touched)
-        && !Object.keys(errors).length
-        && touched.password
-        && touched.email
-        && values.password
-        && values.email
-    ), [isValid, touched, values, errors]);
-
     return (
-        <>
-            {renderFields()}
-
-            <SubmitButton
-                enable={inputsValid}
-                style={styles.submitBtn}
-                onPress={handleSubmit}
-                title="Sign In"
-                activeOpacity={.5}
-            />
-        </>
+        <FormWithValidation
+            wrapperStyle={styles.container}
+            inputs={inputs}
+            uniqInputsProps={uniqInputsProps}
+            onSubmit={handleSubmit}
+            submitTitle="Sign Up"
+            errors={errors}
+            handleChange={handleChange}
+            values={values}
+            touched={touched}
+            isValid={isValid}
+            handleBlur={handleBlur}
+        />
     );
 }
 

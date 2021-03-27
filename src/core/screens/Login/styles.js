@@ -10,7 +10,6 @@ export default StyleSheet.create({
         paddingTop: 65,
         justifyContent: 'flex-start',
         alignItems: 'center',
-        paddingHorizontal: SIZES.paddingHorizontal,
         paddingBottom: 35,
     },
     regButton: {

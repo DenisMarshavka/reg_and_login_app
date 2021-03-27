@@ -4,7 +4,6 @@ import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 import styles from './styles';
 import withSystemTheme from "../../../utils/HoC/withSystemTheme";
-import {Container} from "../../components";
 import Header from "../../components/Header";
 import RegForm from "./Form";
 
